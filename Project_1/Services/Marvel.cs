@@ -57,7 +57,7 @@ namespace Project_1.Services
             return sb.ToString();
         }
 
-        public static IRestResponse<CharacterResult> getAvengers(int avengerId)
+        public static Character getAvengers(int avengerId)
         {
             var client = new RestClient();
             client.BaseUrl = new Uri("https://gateway.marvel.com");
@@ -80,10 +80,18 @@ namespace Project_1.Services
             request.Resource = "/v1/public/characters/{characterId}";
 
             IRestResponse<CharacterResult> response = client.Execute<CharacterResult>(request);
-            return response;
+
+            Character character = null;
+
+            if (response.Data.Data.Results.Count() > 0)
+            {
+                character = response.Data.Data.Results[0];
+            }
+
+            return character;
         }
 
-        public static IRestResponse<CharacterResult> searchAvengers(string characterName)
+        public static Character searchAvengers(string characterName)
         {
             var client = new RestClient();
             client.BaseUrl = new Uri("https://gateway.marvel.com");
@@ -106,7 +114,15 @@ namespace Project_1.Services
             request.Resource = "/v1/public/characters";
 
             IRestResponse<CharacterResult> response = client.Execute<CharacterResult>(request);
-            return response;
+
+            Character character = null;
+
+            if (response.Data.Data.Results.Count() > 0)
+            {
+                 character = response.Data.Data.Results[0];
+            }
+
+            return character;
         }
     }
 

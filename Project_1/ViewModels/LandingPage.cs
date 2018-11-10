@@ -9,6 +9,6 @@ namespace Project_1.ViewModels
 {
     public class LandingPage
     {
-        public List<IRestResponse<CharacterResult>> heroes = new List<IRestResponse<CharacterResult>>();
+        public List<Character> characters = new List<Character>();
     }
 }

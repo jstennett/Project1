@@ -1,6 +1,6 @@
 ﻿@using Project_1.Models;
 @using RestSharp;
-@model IRestResponse<CharacterResult>
+@model Character
 
 <div class="row justify-content-center">
     <div class="col-8">
@@ -8,9 +8,9 @@
             <div class="row justify-content-center">
                 <div class="col-6">
                     <div class="card">
-                        <img class="card-img-top" src=@(Model.Data.Data.Results[0].Thumbnail.Path + ".jpg") style="height: 200px;" alt="Card image cap">
+                        <img class="card-img-top" src=@(Model.Thumbnail.Path + ".jpg") style="height: 200px;" alt="Card image cap">
                         <div class="card-body">
-                            <p class="card-text">@Model.Data.Data.Results[0].Name</p>
+                            <p class="card-text">@Model.Name</p>
                         </div>
                     </div>
                 </div>

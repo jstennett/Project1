@@ -13,33 +13,33 @@ namespace Project_1.Controllers
 {
     public class HomeController : Controller
     {
-        public static List<Avenger> avengers = new List<Avenger>();
+        public static List<Avenger> avengers = new List<Avenger>() {
+            //blackwidow
+            new Avenger { AvengerId = 1009189 },
+            //captain america
+            new Avenger { AvengerId = 1009220 },
+            // Hulk
+            new Avenger { AvengerId = 1009351 },
+            //Doctor Strange
+            new Avenger { AvengerId = 1009282 },
+            // hawkeye
+            new Avenger { AvengerId = 1009338 },
+            // thor
+            new Avenger { AvengerId = 1009664 },
+            //spider man
+            new Avenger { AvengerId = 1009610 },
+    };
         public static LandingPage landingPage = new LandingPage();
 
         public ActionResult Index()
         {
-            //blackwidow
-            avengers.Add(new Avenger { AvengerId = 1009189 });
-            //captain america
-            avengers.Add(new Avenger { AvengerId = 1009220 });
-            // Hulk
-            avengers.Add(new Avenger { AvengerId = 1009351 });
-            //Doctor Strange
-            avengers.Add(new Avenger { AvengerId = 1009282 });
-            // hawkeye
-            avengers.Add(new Avenger { AvengerId = 1009338 });
-            // thor
-            avengers.Add(new Avenger { AvengerId = 1009664 });
-            //spider man
-            avengers.Add(new Avenger { AvengerId = 1009610 });
-            
-            if (avengers.Count() > 1 && landingPage.heroes.Count() < 1)
+            if (avengers.Count() > 1 && landingPage.characters.Count() < 1)
             {
                 foreach (Avenger item in avengers)
                 {
-                    IRestResponse<CharacterResult> result = Marvel.getAvengers(item.AvengerId);
-
-                    landingPage.heroes.Add(result);
+                    Character character = Marvel.getAvengers(item.AvengerId);
+                    
+                    landingPage.characters.Add(character);
                 }
             }
             
@@ -69,27 +69,26 @@ namespace Project_1.Controllers
         [HttpPost]
         public ActionResult SearchCharacter(String characterName)
         {
-            if (landingPage.heroes.Select(x => x.Data.Data.Results.Where(y => y.Name == characterName)));
-            {
+            Character character = Marvel.searchAvengers(characterName);
 
-            }
-            IRestResponse<CharacterResult> response = Marvel.searchAvengers(characterName);
-
-            return View("SearchCharacter", response);
+            return View("SearchCharacter", character);
         }
 
         public ActionResult AddCharacter(int id)
         {
-            landingPage.heroes.Add(Marvel.getAvengers(id));
+            if (!landingPage.characters.Exists(x => x.Id == id))
+            {
+                landingPage.characters.Add(Marvel.getAvengers(id));
+            }
 
             return View("Index", landingPage);
         }
 
         public ActionResult Character(int id)
         {
-            IRestResponse<CharacterResult> result = Marvel.getAvengers(id);
+            Character character = Marvel.getAvengers(id);
 
-            return View("Character", result);
+            return View("Character", character);
         }
     }
 }
