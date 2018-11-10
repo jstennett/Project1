@@ -1,0 +1,38 @@
+﻿@using Project_1.ViewModels
+@model LandingPage
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron jumbotronImage">
+</div>
+
+@if (Model.heroes.Count() > 0)
+{
+for (int i = 0; i < Model.heroes.Count(); i++)
+{
+    if (i % 3 == 0)
+    {
+        <div class="row buffer">
+            @do
+            {
+            <div class="col-4">
+                <div class="card">
+                    <a href="@Url.Action("Character", "Home", new { id = Model.heroes[i].Data.Data.Results[0].Id})">
+                        <img class="card-img-top" src=@(Model.heroes[i].Data.Data.Results[0].Thumbnail.Path + ".jpg") style="height: 200px;" alt="Card image cap">
+
+                        <div class="card-body">
+                            <p class="card-text">@Model.heroes[i].Data.Data.Results[0].Name</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+                i++;
+            }
+            while (i % 3 != 0 && i < Model.heroes.Count());
+        </div>
+        i--;
+    }
+}
+}

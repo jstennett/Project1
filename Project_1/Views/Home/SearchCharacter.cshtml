@@ -1,0 +1,39 @@
+﻿@using Project_1.Models;
+@using RestSharp;
+@model IRestResponse<CharacterResult>
+
+@{
+    ViewBag.Title = "SearchCharacter";
+}
+
+@if (@Model != null)
+{
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="card buffer" style="padding: 10px;">
+                <div class="row justify-content-center">
+                    <div class="col-6">
+                        <div class="card">
+                            <img class="card-img-top" src=@(Model.Data.Data.Results[0].Thumbnail.Path + ".jpg") style="height: 200px;" alt="Card image cap">
+                            <div class="card-body">
+                                <p class="card-text">@Model.Data.Data.Results[0].Name</p>
+                            </div>
+                        </div>
+                        <div class="row buffer">
+                            <a type="button" href="@Url.Action("AddCharacter", "Home", new { id = Model.Data.Data.Results[0].Id })" class="btn btn-success">Success</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row buffer">
+    <div class="search-container">
+        @using (Html.BeginForm("SearchCharacter", "Home", FormMethod.Post))
+        {
+            <input type="text" placeholder="Search.." name="characterName">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        }
+    </div>
+</div>
