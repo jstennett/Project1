@@ -2,17 +2,24 @@
 @using RestSharp;
 @model Character
 
-<div class="row justify-content-center">
-    <div class="col-8">
-        <div class="card buffer" style="padding: 10px;">
-            <div class="row justify-content-center">
-                <div class="col-6">
-                    <div class="card">
-                        <img class="card-img-top" src=@(Model.Thumbnail.Path + ".jpg") style="height: 200px;" alt="Card image cap">
-                        <div class="card-body">
-                            <p class="card-text">@Model.Name</p>
-                        </div>
-                    </div>
+<div class="marvel">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <div class="card">
+                <img class="card-img-top" src=@(Model.Thumbnail.Extension == null ? Model.Thumbnail.Path : (@Model.Thumbnail.Path + ".jpg")) alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Character Name</h5>
+                    <p class="card-text">@Model.Name</p>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Character Description</h5>
+                    <p class="card-text">@(Model.Description == "" ? "No Description Available" : Model.Description)</p>
+                </div>
+                <div class="card-body">
+                    <a href="@(Model.Urls == null ? "#" : Model.Urls[Model.Urls.FindIndex(x => x.Type =="wiki")].URL)" class="card-link">@(Model.Urls == null ? "No Wiki Link Available" : "Wiki Link")</a>
+                </div>
+                <div class="card-body">
+                    <a type="button" href="@Url.Action("DeleteCharacter", "Home" , new { id=Model.Id })" class="btn btn-success float-right">Delete Character</a>
                 </div>
             </div>
         </div>

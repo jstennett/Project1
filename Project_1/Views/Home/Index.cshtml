@@ -4,35 +4,41 @@
 @{
     ViewBag.Title = "Home Page";
 }
-
-<div class="jumbotron jumbotronImage">
-</div>
-
-@if (Model.characters.Count() > 0)
-{
-    for (int i = 0; i < Model.characters.Count(); i++)
-    {
-        if (i % 3 == 0)
-        {
-        <div class="row buffer">
-            @do
-            {
-            <div class="col-4">
-                <div class="card">
-                    <a href="@Url.Action("Character", "Home", new { id = Model.characters[i].Id})">
-                        <img class="card-img-top" src=@(Model.characters[i].Thumbnail.Path + ".jpg") style="height: 200px;" alt="Card image cap">
-
-                        <div class="card-body">
-                            <p class="card-text">@Model.characters[i].Name</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-                i++;
-            }
-            while (i % 3 != 0 && i < Model.characters.Count());
+<div class="marvel">
+    <div class="jumbotron jumbotronImage" style="margin-bottom:0px;">
+    </div>
+    <div class="card" style="margin-top:0;">
+        <div class="card-body">
+            <h1>Avengers Assemble!</h1>
+            <p class="card-text">Use this website to explore characters from the Marvel universe, create new characters, and form the ultimate Avengers roster! Below is the current roster.</p>
         </div>
-        i--;
+    </div>
+    @if (Model.characters.Count() > 0)
+    {
+        for (int i = 0; i < Model.characters.Count(); i++)
+        {
+            if (i % 3 == 0)
+            {
+                <div class="row buffer">
+                    @do
+                    {
+                        <div class="col-4">
+                            <div class="card">
+                                <a href="@Url.Action("Character", "Home", new { id = i })">
+                                    <img class="card-img-top" src=@(Model.characters[i].Thumbnail.Extension == null ? Model.characters[i].Thumbnail.Path : (@Model.characters[i].Thumbnail.Path + ".jpg")) style="height: 200px;" alt="Card image cap">
+
+                                    <div class="card-body">
+                                        <p class="card-text">@Model.characters[i].Name</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        i++;
+                    }
+                    while (i % 3 != 0 && i < Model.characters.Count());
+                </div>
+                i--;
+            }
+        }
     }
-}
-}
+</div>

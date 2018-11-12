@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -16,11 +17,13 @@ namespace Project_1.Models
         /// <summary>
         /// The name of the character.
         /// </summary>
+        [Required]
         public string Name { get; set; }
 
         /// <summary>
         /// A short bio or description of the character.
         /// </summary>
+        [Required]
         public string Description { get; set; }
 
         /// <summary>
@@ -37,6 +40,11 @@ namespace Project_1.Models
         /// The representative image for this character.
         /// </summary>
         public Thumbnail Thumbnail { get; set; }
+
+        /// <summary>
+        /// A set of public web site URLs for the resource.
+        /// </summary>
+        public List<Url> Urls { get; set; }
 
         #endregion
     }

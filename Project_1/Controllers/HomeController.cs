@@ -1,12 +1,9 @@
 ﻿using Project_1.Models;
 using Project_1.Services;
 using Project_1.ViewModels;
-using Project_1.Models;
-using RestSharp;
-using System;
+ using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Project_1.Controllers
@@ -86,9 +83,59 @@ namespace Project_1.Controllers
 
         public ActionResult Character(int id)
         {
-            Character character = Marvel.getAvengers(id);
+
+            Character character = landingPage.characters[id];
 
             return View("Character", character);
+        }
+
+        public ActionResult CreateCharacter()
+        {
+
+            return View ();
+        }
+
+        [HttpPost]
+        public ActionResult CreateCharacter(Character character)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("CreateCharacter");
+            }
+
+            if (landingPage.characters.Exists(x => x.Name == character.Name))
+            {
+                return View("Index", landingPage);
+            }
+
+            Random random = new Random();
+            int i = random.Next();
+
+            Character newCharacter = new Character()
+            {
+                Name = character.Name,
+                Description = character.Description,
+                Id = i,
+                Thumbnail = new Thumbnail
+                {
+                    Path = character.Thumbnail.Path
+                }
+            };
+
+            landingPage.characters.Add(newCharacter);
+            return View("Index", landingPage);
+        }
+
+        public ActionResult DeleteCharacter(int id)
+        {
+            if (landingPage.characters.Exists(x => x.Id == id))
+            {
+                landingPage.characters.RemoveAt(landingPage.characters.FindIndex(x => x.Id == id));
+
+                return View("Index", landingPage);
+            }
+
+            return View("Index", landingPage);
         }
     }
 }
