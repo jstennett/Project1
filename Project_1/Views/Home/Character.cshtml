@@ -2,6 +2,10 @@
 @using RestSharp;
 @model Character
 
+<ul class="breadcrumb">
+    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Character Roster</a></li>
+    <li class="breadcrumb-item active"><a href="#">Character</a></li>
+</ul>
 <div class="marvel">
     <div class="row justify-content-center">
         <div class="col-6">
