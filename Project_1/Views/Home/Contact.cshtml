@@ -1,10 +1,76 @@
 ﻿@{
     ViewBag.Title = "Contact";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<address>
+<!--The contact view will have basic company information, such as phone number and email. The view will also have a contact form that
+    will have
+    fields for the user’s name, email, subject(choose from a list), and message body.
+There will need to be a submit button at the bottom of the contact form. This button however, won’t do anything with the data yet.
+    For now it will just clear the text in the form.-->
+
+<div class="row justify-content-center" style="margin-top:5px;">
+    <div class="col-8">
+        <div class="card">
+            <h3 class="card-header">Contanct Information</h3>
+            <div class="card-body">
+                <h5 class="font-weight-bold">Address</h5>
+                <p class="card-text">890 Fifth Avenue, Manhattan, New York City.</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Phone:</strong> (123)-456-7890</li>
+                <li class="list-group-item"><strong>Email:</strong> Avengers@Hotmail.com</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center" style="margin-top: 15px;">
+    <div class="col-8">
+        <div class="card">
+            <h3 class="card-header">
+                Contact Form
+            </h3>
+            @using (Html.BeginForm("CreateCharacter", "Home", FormMethod.Post))
+            {
+                <div class="form-row justify-content-center">
+                    <div class="form-group col-md-6">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Subject
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <button class="dropdown-item" type="button">Cat stuck in a tree</button>
+                                <button class="dropdown-item" type="button">Thanos is taking over the world</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row justify-content-center">
+                    <div class="form-group col-md-6">
+                        <label for="Name">Name</label>
+                        <input type="text" class="form-control" name="Name" id="Name" placeholder="Name">
+                    </div>
+                </div>
+                <div class="form-row justify-content-center">
+                    <div class="form-group col-6">
+                        <label for="Description">Email</label>
+                        <input type="text" class="form-control" id="Description" name="Email" rows="3" placeholder="Email Address...">
+                    </div>
+                </div>
+                <div class="form-row justify-content-center">
+                    <div class="form-group col-6">
+                        <label for="Thumbnail.Path">Message Body</label>
+                        <textarea rows="3" class="form-control" id="Message" name="Message" placeholder="Message Body"></textarea>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;">Submit</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!--<address>
     One Microsoft Way<br />
     Redmond, WA 98052-6399<br />
     <abbr title="Phone">P:</abbr>
@@ -15,3 +81,4 @@
     <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
     <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
 </address>
+    -->
