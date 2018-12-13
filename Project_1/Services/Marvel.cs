@@ -117,10 +117,14 @@ namespace Project_1.Services
 
             Character character = null;
 
-            if (response.Data.Data.Results.Count() > 0)
+            if (response.Data.Data != null)
             {
-                 character = response.Data.Data.Results[0];
+                if (response.Data.Data.Results.Count() > 0)
+                {
+                    character = response.Data.Data.Results[0];
+                }
             }
+            
 
             return character;
         }

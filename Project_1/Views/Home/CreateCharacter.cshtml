@@ -6,32 +6,43 @@
 <div class="row justify-content-center">
     <div class="col-7">
         <div class="card" style="margin-top: 10px;">
-            @using (Html.BeginForm("CreateCharacter", "Home", FormMethod.Post))
-            {
-                
-                <div class="form-row justify-content-center">
-                    <div class="form-group col-md-6">
-                        <h3>Create a New Character!</h3>
-                        <label for="Name">Name</label>
-                        <input type="text" class="form-control" name="Name" id="Name" placeholder="Name">
+            <h3 class="card-header">Create a Character!</h3>
+            <div class="card-body">
+                @using (Html.BeginForm("CreateCharacter", "Home", FormMethod.Post))
+                {
+
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-6">
+                            <label for="Name">Name</label>
+                            <input type="text" class="form-control" name="Name" id="Name" placeholder="Name">
+                        </div>
                     </div>
-                </div>
-                <div class="form-row justify-content-center">
-                    <div class="form-group col-6">
-                        <label for="Description">Description</label>
-                        <textarea class="form-control" id="Description" name="Description" rows="3" placeholder="Character Description"></textarea>
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-6">
+                            <label for="Description">Description</label>
+                            <textarea class="form-control" id="Description" name="Description" rows="3" placeholder="Character Description"></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="form-row justify-content-center">
-                    <div class="form-group col-6">
-                        <label for="Thumbnail.Path">Character Image</label>
-                        <input type="text" class="form-control" id="Thumbnail.Path" name="Thumbnail.Path" placeholder="URL to character image">
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-6">
+                            <label for="ThumbnailURL">Character Image</label>
+                            <input type="text" class="form-control" id="ThumbnailURL" name="ThumbnailURL" placeholder="URL to character image">
+                        </div>
                     </div>
-                </div>
-                <div class="row justify-content-center">
-                    <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;">Create Character</button>
-                </div>
-            }
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-6">
+                            <label for="URL">Wiki Link</label>
+                            <input type="text" class="form-control" id="URL" name="URL" placeholder="Wiki link to Character">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;">Create Character</button>
+                    </div>
+                    <div class="form-row justify-content-center">
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

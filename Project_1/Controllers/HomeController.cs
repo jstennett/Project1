@@ -1,15 +1,24 @@
 ﻿using Project_1.Models;
 using Project_1.Services;
 using Project_1.ViewModels;
- using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Project_1.DAL;
+using System.Data.Entity;
+using System.Web.Security;
 
 namespace Project_1.Controllers
 {
+    //IS 403 Sec 2
+    //Authors: Jordan Stennett, Hunter Muse, Hayden Davis, Scotty Pugmire
+
     public class HomeController : Controller
     {
+        private MarvelContext db = new MarvelContext();
+
+        /*
         public static List<Avenger> avengers = new List<Avenger>() {
             //blackwidow
             new Avenger { AvengerId = 1009189 },
@@ -25,22 +34,32 @@ namespace Project_1.Controllers
             new Avenger { AvengerId = 1009664 },
             //spider man
             new Avenger { AvengerId = 1009610 },
-    };
-        public static LandingPage landingPage = new LandingPage();
 
+        };
+        */
+  
         public ActionResult Index()
         {
-            if (avengers.Count() > 1 && landingPage.characters.Count() < 1)
+            /*
+            foreach (Avenger item in avengers)
             {
-                foreach (Avenger item in avengers)
+                Character character = Marvel.getAvengers(item.AvengerId);
+
+                CharacterDB characterDB = new CharacterDB()
                 {
-                    Character character = Marvel.getAvengers(item.AvengerId);
-                    
-                    landingPage.characters.Add(character);
-                }
+                    CharacterID = character.Id,
+                    Description = character.Description,
+                    Name = character.Name,
+                    ThumbnailURL = (character.Thumbnail.Path + "." + character.Thumbnail.Extension),
+                    URL = character.Urls[character.Urls.FindIndex(x => x.Type == "wiki")].URL
+                };
+
+                db.Characters.Add(characterDB);
+                db.SaveChanges();
             }
-            
-            return View(landingPage);
+            */
+
+            return View(db.Characters.ToList());
         }
 
         public ActionResult About()
@@ -68,74 +87,171 @@ namespace Project_1.Controllers
         {
             Character character = Marvel.searchAvengers(characterName);
 
+            if (character == null)
+            {
+                ViewBag.ErrorMessage = true;
+
+                return View("SearchCharacter");
+            }
+
             return View("SearchCharacter", character);
         }
 
+        [Authorize]
         public ActionResult AddCharacter(int id)
         {
-            if (!landingPage.characters.Exists(x => x.Id == id))
+            if (!db.Characters.Any(x => x.CharacterID == id))
             {
-                landingPage.characters.Add(Marvel.getAvengers(id));
+                Character tempCharacter = Marvel.getAvengers(id);
+
+                db.Characters.Add(new CharacterDB
+                {
+                    CharacterID = id,
+                    Description = tempCharacter.Description,
+                    Name = tempCharacter.Name,
+                    ThumbnailURL = (tempCharacter.Thumbnail.Path + "." + tempCharacter.Thumbnail.Extension),
+                    URL = tempCharacter.Urls[tempCharacter.Urls.FindIndex(x => x.Type == "wiki")].URL
+                });
+
+                db.SaveChanges();
             }
 
-            return View("Index", landingPage);
+            return View("Index", db.Characters.ToList());
         }
 
         public ActionResult Character(int id)
         {
 
-            Character character = landingPage.characters[id];
-
-            return View("Character", character);
+            return View("Character", db.Characters.Where(x => x.CharacterID == id).FirstOrDefault());
         }
 
+        [Authorize]
         public ActionResult CreateCharacter()
         {
 
-            return View ();
+            return View();
         }
 
         [HttpPost]
-        public ActionResult CreateCharacter(Character character)
+        public ActionResult CreateCharacter(CharacterDB character)
         {
             if (!ModelState.IsValid)
             {
                 return View("CreateCharacter");
             }
 
-            if (landingPage.characters.Exists(x => x.Name == character.Name))
+            if (db.Characters.Any(x => x.Name == character.Name))
             {
-                return View("Index", landingPage);
+                return View("Index", db.Characters.ToList());
             }
 
             Random random = new Random();
-            int i = random.Next();
+            int i = random.Next(2000);
 
-            Character newCharacter = new Character()
+            CharacterDB newCharacter = new CharacterDB()
             {
                 Name = character.Name,
                 Description = character.Description,
-                Id = i,
-                Thumbnail = new Thumbnail
-                {
-                    Path = character.Thumbnail.Path
-                }
+                CharacterID = i,
+                ThumbnailURL = character.ThumbnailURL,
+                URL = character.URL
             };
 
-            landingPage.characters.Add(newCharacter);
-            return View("Index", landingPage);
+            db.Characters.Add(newCharacter);
+            db.SaveChanges();
+            return View("Index", db.Characters.ToList());
         }
 
+        [Authorize]
         public ActionResult DeleteCharacter(int id)
         {
-            if (landingPage.characters.Exists(x => x.Id == id))
+            if (db.Characters.Any(x => x.CharacterID == id))
             {
-                landingPage.characters.RemoveAt(landingPage.characters.FindIndex(x => x.Id == id));
+                db.Characters.Remove(db.Characters.Where(x => x.CharacterID == id).FirstOrDefault());
 
-                return View("Index", landingPage);
+                db.SaveChanges();
+                return View("Index", db.Characters.ToList());
             }
 
-            return View("Index", landingPage);
+            return View("Index", db.Characters.ToList());
+        }
+
+        [Authorize]
+        public ActionResult EditCharacter(int id)
+        {
+            CharacterDB character = db.Characters.Find(id);
+
+
+            return View(character);
+        }
+
+        [HttpPost]
+        public ActionResult EditCharacter(CharacterDB character, int id)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(character).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(character);
+        }
+
+        [HttpGet]
+        public ActionResult Login()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Login(string email, string password, bool rememberMe = false)
+        {
+            string Email = email;
+            string Password = password;
+
+            if (db.Users.Any(x => x.Email == Email))
+            {
+                if (db.Users.SingleOrDefault(x => x.Email == Email).Password == Password)
+                {
+                    FormsAuthentication.SetAuthCookie(Email, false);
+
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                ViewBag.ErrorMessage = true;
+                return View();
+            }
+
+            
+        }
+
+        public ActionResult SignUp ()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SignUp(UserDB user)
+        {
+            if (ModelState.IsValid)
+            {
+                return View(user);
+            }
+
+                db.Users.Add(user);
+            db.SaveChanges();
+
+            FormsAuthentication.SetAuthCookie(user.Email, false);
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

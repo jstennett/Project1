@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="row justify-content-center" style="margin-top:10px;">
+    <div class="col-8">
+        <div class="card">
+            <h3 class="card-header">Login</h3>
+            <div class="card-body">
+                @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+                {
+                    <div class="form-group">
+                        <div class="form-row">
+                            <label for="Name">Email</label>
+                            <input type="text" class="form-control" name="email" id="UserName" placeholder="User Name">
+                        </div>
+                        <div class="form-row">
+                            <label for="Name">Password</label>
+                            <input type="password" class="form-control" name="password" id="Password" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-center">
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-success">Login</button>
+                        </div>
+                        <div class="col-3">
+                            <a type="button" class="btn btn-primary" href="@Url.Action("SignUp", "Home")">Create Account</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    @if (ViewBag.ErrorMessage == true)
+    {
+        <div class="col-8">
+            <div class="alert alert-danger" role="alert">
+                Username or password is incorrect
+            </div>
+        </div>
+    }
+</div>
